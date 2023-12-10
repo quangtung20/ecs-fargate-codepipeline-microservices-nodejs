@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+    - echo "Logging in to DockerHub..."
+    - echo "123456789" | docker login -u "quangtung" --password-stdin
+
+  build:
+    commands:
+    - echo "Building your application..."
+    - docker build -t tre .
+    - docker tag tre quangtung20/tre:latest
+
+  post_build:
+    commands:
+    - echo "Pushing the Docker image to DockerHub..."
+    - docker push quangtung20/tre:latest
+    - printf '[{"name":"fgms-tre","imageUri":"%s"}]' quangtung20/tre:latest > imagedefinitions.json
+
+artifacts:
+  files: imagedefinitions.json
